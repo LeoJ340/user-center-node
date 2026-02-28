@@ -1,0 +1,9 @@
+{
+    "mcpServers": {
+      "DBHub": {
+        "command": "npx @bytebase/dbhub --transport stdio --dsn mysql://root:Jsj33460042@localhost:3306",
+        "env": {},
+        "args": []
+      }
+    }
+  }
