@@ -4,14 +4,19 @@ import { AppError } from "@/utils/errors";
 
 export function validateBody(schema: ZodSchema) {
   return (req: Request, _res: Response, next: NextFunction) => {
-    const parsed = schema.safeParse(req.body);
-    if (!parsed.success) {
-      return next(
-        new AppError("参数校验失败", 400)
-      );
-    }
-    req.body = parsed.data;
-    return next();
-  };
+    const parsed = schema.safeParse(req.body)
+    if (!parsed.success) return next(new AppError("参数校验失败", 400))
+    req.body = parsed.data
+    return next()
+  }
+}
+
+export function validateQuery(schema: ZodSchema) {
+  return (req: Request, _res: Response, next: NextFunction) => {
+    const parsed = schema.safeParse(req.query)
+    if (!parsed.success) return next(new AppError("参数校验失败", 400))
+    req.query = parsed.data as Request["query"]
+    return next()
+  }
 }
 

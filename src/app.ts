@@ -2,7 +2,9 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import pinoHttp from "pino-http";
+import cookieParser from "cookie-parser";
 
+import { config } from "@/config";
 import { logger } from "@/config/logger";
 import { requestId } from "@/middlewares/requestId";
 import { errorHandler } from "@/middlewares/errorHandler";
@@ -27,8 +29,22 @@ export function createApp() {
   );
 
   app.use(helmet());
-  app.use(cors());
+  const allowedOrigins = config.cors.origin
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  app.use(
+    cors({
+      origin: (origin, cb) => {
+        if (!origin) return cb(null, true);
+        if (allowedOrigins.includes(origin)) return cb(null, true);
+        return cb(new Error("Not allowed by CORS"));
+      },
+      credentials: true,
+    })
+  );
   app.use(express.json({ limit: "1mb" }));
+  app.use(cookieParser());
 
   app.use("/api/v1", apiRouter);
 

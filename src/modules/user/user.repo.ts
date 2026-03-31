@@ -1,33 +1,27 @@
-import type { Transaction } from "sequelize";
+import { Op } from "sequelize";
+import type { InferAttributes, Transaction, WhereOptions } from "sequelize";
 import { User } from "@/db/models/User";
 
 export const userRepo = {
-  findById(id: number) {
-    return User.findByPk(id);
+
+  findOne(where: WhereOptions<InferAttributes<User>>) {
+    return User.findOne({ where })
   },
 
-  findByUserAccount(userAccount: string) {
-    return User.findOne({ where: { userAccount } });
+  findById(id: number | string) {
+    return User.findByPk(id)
   },
 
-  findByEmail(email: string) {
-    return User.findOne({ where: { email } });
-  },
-
-  create(
-    input: {
-      userAccount?: string;
-      userPassword: string;
-      nickname?: string;
-      avatar?: string;
-      gender?: number;
-      phone?: string;
-      email?: string;
-      userStatus?: number;
-    },
-    tx?: Transaction
-  ) {
-    return User.create(input, { transaction: tx });
+  findByLogin(accountOrEmailOrPhone: string) {
+    return User.findOne({
+      where: {
+        [Op.or]: [
+          { userAccount: accountOrEmailOrPhone },
+          { email: accountOrEmailOrPhone },
+          { phone: accountOrEmailOrPhone },
+        ],
+      },
+    })
   },
 };
 

@@ -13,7 +13,7 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
   if (isAppError(err)) {
     logger.warn({ requestId, code: err.code }, err.message);
     return res.status(200).json({
-      code: 500,
+      code: err.code,
       message: err.message,
       data: null,
       requestId,

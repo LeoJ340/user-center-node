@@ -4,6 +4,7 @@ import { config } from "@/config";
 import { logger } from "@/config/logger";
 import { connectDb, sequelize } from "@/db/sequelize";
 import { initModels } from "@/db/models";
+import { closeRedis } from "@/db/redis";
 
 async function start() {
   await connectDb();
@@ -19,6 +20,7 @@ async function start() {
   const shutdown = async (signal: string) => {
     logger.info({ signal }, "Shutting down");
     server.close(async () => {
+      await closeRedis();
       await sequelize.close();
       process.exit(0);
     });

@@ -25,8 +25,8 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     User.init(
       {
         id: {
-          type: DataTypes.BIGINT,
-          autoIncrement: true,
+          type: DataTypes.UUID,
+          defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
         },
         nickname: {

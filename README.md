@@ -1,6 +1,6 @@
 # user-server-node
 
-TypeScript + Express + Sequelize + MySQL 的后端工程骨架。
+Express + Sequelize + MySQL 的后端服务工程。
 
 ## 环境要求
 
@@ -40,3 +40,5 @@ TS 编译期：`tsconfig.json` 中 `paths: { "@/*": ["src/*"] }`
 - 开发：`ts-node-dev -r tsconfig-paths/register`
 - 构建：`tsc` 后运行 `tsc-alias` 把 dist 里的 `@/` 引用改写为相对路径
 
+## TODO
+- 鉴权方案选型，理解 JWT、Session、OAuth2 等方案的优缺点，选择适合项目需求的鉴权方案。
