@@ -45,15 +45,19 @@ export const authService = {
     const payload = verifyRefreshToken(refreshToken) as any;
     const nowSec = Math.floor(Date.now() / 1000);
     /**
-     * payload.exp：token 过期时间（单位：秒）
+     * payload.exp：token 过期时间戳（秒）
      * nowSec：当前时间戳（秒）
-     * exp - nowSec：token 过期时间减去当前时间（距离过期还剩多少秒）
+     * payload.exp - nowSec：token 过期时间减去当前时间（距离过期还剩多少秒）
      * Math.max(1, ...)：最小给 1 秒，避免出现 0 或负数导致 Redis EX 不合法/立即失效
      */
     const ttl = Math.max(1, Number(payload.exp ?? nowSec + 7 * 24 * 3600) - nowSec);
     try {
-      // 服务端只存 refreshToken 的 hash（不存明文），用于：
-      // 1) logout 立即失效；2) refresh 旋转后让旧 token 作废；3) 降低泄露风险。
+      /**
+       * 服务端只存 refreshToken 的 hash（不存明文），用于：
+       * 1) logout 立即失效；
+       * 2) refresh 旋转后让旧 token 作废；
+       * 3) 降低泄露风险。
+       */
       await refreshStore.set(userId, { sid, hash: hashToken(refreshToken) }, ttl);
     } catch (err) {
       throw this.mapRedisError(err);

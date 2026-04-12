@@ -1,7 +1,7 @@
 import type { Response } from "express";
 
 /**
- * RESTful 响应格式类
+ * RESTFULL 响应格式类
  * @author: leoJ
  * @date: 2026-02-28
  */

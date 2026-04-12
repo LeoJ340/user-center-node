@@ -14,9 +14,12 @@ import { apiRouter } from "@/routes";
 export function createApp() {
   const app = express();
 
+  // 禁用 X-Powered-By 头
   app.disable("x-powered-by");
 
+  // 请求 ID
   app.use(requestId);
+  // 日志
   app.use(
     pinoHttp({
       logger,
@@ -28,7 +31,9 @@ export function createApp() {
     })
   );
 
+  // 安全头
   app.use(helmet());
+  // CORS
   const allowedOrigins = config.cors.origin
     .split(",")
     .map((s) => s.trim())
@@ -43,7 +48,9 @@ export function createApp() {
       credentials: true,
     })
   );
+  // 解析 JSON 请求体
   app.use(express.json({ limit: "1mb" }));
+  // 解析 Cookie
   app.use(cookieParser());
 
   app.use("/api/v1", apiRouter);

@@ -1,4 +1,4 @@
-import { env } from "./env";
+import { env } from './env'
 
 function buildRedisUrl() {
   if (env.REDIS_URL) return env.REDIS_URL;
