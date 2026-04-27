@@ -17,7 +17,7 @@ const envSchema = z.object({
   DB_PASS: z.string().optional().default(""),
   DB_NAME: z.string().min(1),
   DB_POOL_MAX: z.coerce.number().int().positive().default(5),
-  DB_POOL_MIN: z.coerce.number().int().positive().default(0),
+  DB_POOL_MIN: z.coerce.number().int().min(0).default(0),
   DB_POOL_ACQUIRE: z.coerce.number().int().positive().default(30000),
   DB_POOL_IDLE: z.coerce.number().int().positive().default(10000),
 

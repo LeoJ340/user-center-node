@@ -28,17 +28,9 @@ pnpm run dev
 
 示例接口：
 
-- `POST /api/v1/users`
-- `GET /api/v1/users/:id`
-
-## 路径别名（@）
-
-TS 编译期：`tsconfig.json` 中 `paths: { "@/*": ["src/*"] }`
-
-运行期：
-
-- 开发：`ts-node-dev -r tsconfig-paths/register`
-- 构建：`tsc` 后运行 `tsc-alias` 把 dist 里的 `@/` 引用改写为相对路径
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/refresh`
+- `GET /api/v1/user/:id`
 
 ## TODO
 - 鉴权方案选型，理解 JWT、Session、OAuth2 等方案的优缺点，选择适合项目需求的鉴权方案。
