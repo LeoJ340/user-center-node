@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { Request, Response } from 'express';
 
 export const errorController = {
   throwError(_req: Request, _res: Response) {

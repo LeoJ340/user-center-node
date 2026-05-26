@@ -1,5 +1,5 @@
-import type { Sequelize } from "sequelize";
-import { User } from "./User";
+import type { Sequelize } from 'sequelize';
+import { User } from './User';
 
 export function initModels(sequelize: Sequelize) {
   User.initModel(sequelize);
@@ -7,4 +7,3 @@ export function initModels(sequelize: Sequelize) {
 }
 
 export const models = { User };
-

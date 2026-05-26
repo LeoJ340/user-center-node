@@ -1,8 +1,8 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HttpLoggerMiddleware } from './common/middlewares/http-logger.middleware';
-import { RequestIdMiddleware } from './common/middlewares/request-id.middleware';
+import { HttpLoggerMiddleware } from '@/common/middlewares/http-logger.middleware';
+import { RequestIdMiddleware } from '@/common/middlewares/request-id.middleware';
 
 @Module({
   imports: [],

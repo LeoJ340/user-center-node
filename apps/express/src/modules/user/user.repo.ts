@@ -1,15 +1,14 @@
-import { Op } from "sequelize";
-import type { InferAttributes, Transaction, WhereOptions } from "sequelize";
-import { User } from "@/db/models/User";
+import { Op } from 'sequelize';
+import type { InferAttributes, WhereOptions } from 'sequelize';
+import { User } from '@/db/models/User';
 
 export const userRepo = {
-
   findOne(where: WhereOptions<InferAttributes<User>>) {
-    return User.findOne({ where })
+    return User.findOne({ where });
   },
 
   findById(id: number | string) {
-    return User.findByPk(id)
+    return User.findByPk(id);
   },
 
   findByLogin(accountOrEmailOrPhone: string) {
@@ -21,7 +20,6 @@ export const userRepo = {
           { phone: accountOrEmailOrPhone },
         ],
       },
-    })
+    });
   },
 };
-

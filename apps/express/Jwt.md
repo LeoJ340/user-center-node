@@ -58,6 +58,7 @@ flowchart TB
 ## 3. 登录时序图（`POST /api/v1/auth/login`）
 
 说明：
+
 - 输入：`account/password`
 - 输出：`accessToken`（响应体）+ `refresh_token`（HttpOnly Cookie）
 - Redis：写入 `auth:rt:user:{userId}`，值为 `{sid, hash}` + TTL
@@ -103,6 +104,7 @@ sequenceDiagram
 ## 4. 受保护接口鉴权时序（`Authorization: Bearer <AT>`）
 
 说明：
+
 - 鉴权中间件只接受 `Bearer`
 - 仅接受 `type=access` 的 token
 - 验签通过后将 `req.user = { userId, sid }`
@@ -135,6 +137,7 @@ sequenceDiagram
 ## 5. 刷新时序图（`POST /api/v1/auth/refresh`，含旋转）
 
 说明：
+
 - Refresh 优先从 Cookie 读取，Body 仅兜底
 - 必须同时通过：JWT 验签 + Redis `sid/hash` 比对
 - 成功后旋转：`newRT + newAT`，并覆盖 Redis 中 hash
@@ -184,6 +187,7 @@ sequenceDiagram
 ## 6. 登出时序图（`POST /api/v1/auth/logout`）
 
 说明：
+
 - 解析 refreshToken 获取 `sub`
 - 删除 Redis key 后，清除 Cookie
 - 由于 Access Token 是自包含 JWT，若尚未过期仍可能短时间可用（直到 exp）
@@ -291,6 +295,7 @@ flowchart TB
 ```
 
 ### 安全说明
+
 - `HttpOnly` 降低 JS 读取 Refresh Token 风险，但不能替代输入防护，仍需做 XSS 防护。
 - 建议生产环境启用 `COOKIE_SECURE=true`，并仅在 HTTPS 传输。
 - 若前后端跨站部署，建议补充 CSRF 策略（如 double-submit token 或 Origin/Referer 校验）。
@@ -324,10 +329,11 @@ sequenceDiagram
 ```
 
 ### 前端落地要点
+
 - 全局变量 `refreshPromise: Promise<void> | null`
 - 401 时：
-  1) 有 `refreshPromise` 就 `await`  
-  2) 没有就创建并执行 refresh  
+  1. 有 `refreshPromise` 就 `await`
+  2. 没有就创建并执行 refresh
 - refresh 失败统一清理登录态并跳转登录页
 
 ---
@@ -356,4 +362,3 @@ flowchart LR
 - 是否在生产强制 HTTPS + `COOKIE_SECURE=true`。
 - 是否实现前端单飞 refresh，避免并发刷新风暴。
 - 是否定义登录失效后的统一 UX（清状态、跳转、提示）。
-

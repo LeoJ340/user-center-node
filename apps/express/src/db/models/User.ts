@@ -5,7 +5,7 @@ import {
   InferCreationAttributes,
   Model,
   type Sequelize,
-} from "sequelize";
+} from 'sequelize';
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<string>;
@@ -70,27 +70,26 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
         createdAt: {
           type: DataTypes.DATE,
           allowNull: false,
-          field: "create_time",
+          field: 'create_time',
           defaultValue: DataTypes.NOW,
         },
         updatedAt: {
           type: DataTypes.DATE,
           allowNull: true,
-          field: "update_time",
+          field: 'update_time',
           defaultValue: DataTypes.NOW,
         },
       },
       {
         sequelize,
-        tableName: "user",
+        tableName: 'user',
         timestamps: true,
         underscored: true,
-        createdAt: "create_time",
-        updatedAt: "update_time",
-      }
+        createdAt: 'create_time',
+        updatedAt: 'update_time',
+      },
     );
 
     return User;
   }
 }
-

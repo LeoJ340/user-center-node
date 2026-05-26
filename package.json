@@ -13,10 +13,31 @@
     "build": "pnpm -r build",
     "build:express": "pnpm --filter @user-center/express build",
     "build:nest": "pnpm --filter @user-center/nest build",
+    "lint": "eslint \"apps/**/*.ts\"",
+    "lint:fix": "eslint \"apps/**/*.ts\" --fix",
+    "format": "prettier --write \"apps/**/*.{ts,js,mjs,json,md,yaml,yml}\" \"*.{json,md,yaml,yml}\"",
+    "format:check": "prettier --check \"apps/**/*.{ts,js,mjs,json,md,yaml,yml}\" \"*.{json,md,yaml,yml}\"",
+    "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "test:express": "pnpm --filter @user-center/express test",
     "test:nest": "pnpm --filter @user-center/nest test",
     "start:express": "pnpm --filter @user-center/express start",
     "start:nest": "pnpm --filter @user-center/nest start"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/express": "^5.0.6",
+    "@types/node": "^24.0.0",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "globals": "^17.0.0",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.16",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.20.0"
   }
 }

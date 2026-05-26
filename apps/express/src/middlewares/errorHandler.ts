@@ -1,6 +1,6 @@
-import type { NextFunction, Request, Response } from "express";
-import { isAppError } from "@/utils/errors";
-import { logger } from "@/config/logger";
+import type { NextFunction, Request, Response } from 'express';
+import { isAppError } from '@/utils/errors';
+import { logger } from '@/config/logger';
 
 /**
  * 全局错误处理中间件
@@ -20,7 +20,7 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
     });
   }
 
-  logger.error({ requestId, err }, "Unhandled error");
+  logger.error({ requestId, err }, 'Unhandled error');
   return res.status(500).json({
     code: 500,
     message: '服务器内部错误',
@@ -28,4 +28,3 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
     requestId,
   });
 }
-

@@ -1,14 +1,14 @@
-import { env } from './env'
+import { env } from './env';
 
 function buildRedisUrl() {
   if (env.REDIS_URL) return env.REDIS_URL;
 
-  const host = env.REDIS_HOST ?? "127.0.0.1";
+  const host = env.REDIS_HOST ?? '127.0.0.1';
   const port = env.REDIS_PORT ?? 6379;
   const username = env.REDIS_USERNAME;
   const password = env.REDIS_PASSWORD;
 
-  if (password == null || password === "") {
+  if (password == null || password === '') {
     return `redis://${host}:${port}`;
   }
 
@@ -54,7 +54,6 @@ export const config = {
       min: env.DB_POOL_MIN,
       acquire: env.DB_POOL_ACQUIRE,
       idle: env.DB_POOL_IDLE,
-    }
+    },
   },
 } as const;
-

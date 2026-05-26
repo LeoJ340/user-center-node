@@ -1,4 +1,4 @@
-import { connectRedis, redis } from "@/db/redis";
+import { connectRedis, redis } from '@/db/redis';
 
 type Stored = { sid: string; hash: string };
 
@@ -7,7 +7,7 @@ const redisKeyForUser = (userId: string) => `auth:rt:user:${userId}`;
 async function ensureRedisReady() {
   await connectRedis();
   if (!redis.isReady) {
-    throw new Error("Redis not ready");
+    throw new Error('Redis not ready');
   }
 }
 
@@ -36,4 +36,3 @@ export const refreshStore = {
     await redis.del(redisKeyForUser(userId));
   },
 };
-

@@ -1,10 +1,10 @@
-import http from "http";
-import { createApp } from "@/app";
-import { config } from "@/config";
-import { logger } from "@/config/logger";
-import { connectDb, sequelize } from "@/db/sequelize";
-import { initModels } from "@/db/models";
-import { closeRedis } from "@/db/redis";
+import http from 'http';
+import { createApp } from '@/app';
+import { config } from '@/config';
+import { logger } from '@/config/logger';
+import { connectDb, sequelize } from '@/db/sequelize';
+import { initModels } from '@/db/models';
+import { closeRedis } from '@/db/redis';
 
 async function start() {
   await connectDb();
@@ -14,11 +14,11 @@ async function start() {
   const server = http.createServer(app);
 
   server.listen(config.port, () => {
-    logger.info({ port: config.port, env: config.env }, "Server started");
+    logger.info({ port: config.port, env: config.env }, 'Server started');
   });
 
   const shutdown = async (signal: string) => {
-    logger.info({ signal }, "Shutting down");
+    logger.info({ signal }, 'Shutting down');
     server.close(async () => {
       await closeRedis();
       await sequelize.close();
@@ -26,12 +26,11 @@ async function start() {
     });
   };
 
-  process.on("SIGINT", () => shutdown("SIGINT"));
-  process.on("SIGTERM", () => shutdown("SIGTERM"));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
 }
 
 start().catch((err) => {
-  logger.error({ err }, "Failed to start server");
+  logger.error({ err }, 'Failed to start server');
   process.exit(1);
 });
-

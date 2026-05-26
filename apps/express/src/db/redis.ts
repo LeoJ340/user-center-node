@@ -1,14 +1,14 @@
-import { createClient } from "redis";
-import { config } from "@/config";
-import { logger } from "@/config/logger";
+import { createClient } from 'redis';
+import { config } from '@/config';
+import { logger } from '@/config/logger';
 
 export const redis = createClient({ url: config.redis.url });
 
-redis.on("error", (err) => {
-  logger.warn({ err }, "Redis error");
+redis.on('error', (err) => {
+  logger.warn({ err }, 'Redis error');
 });
 
-redis.on("connect", () => logger.info("Redis connected"));
+redis.on('connect', () => logger.info('Redis connected'));
 
 export async function connectRedis() {
   if (redis.isOpen) return;
@@ -18,7 +18,7 @@ export async function connectRedis() {
     // 这里用 PING 提前把鉴权/可用性问题暴露出来，避免业务层误判。
     await redis.ping();
   } catch (err) {
-    logger.warn({ err }, "Redis connect/ping failed");
+    logger.warn({ err }, 'Redis connect/ping failed');
     try {
       if (redis.isOpen) await redis.disconnect();
     } catch {
@@ -33,14 +33,13 @@ export async function closeRedis() {
   try {
     await redis.quit();
   } catch (err) {
-    logger.warn({ err }, "Redis quit failed");
+    logger.warn({ err }, 'Redis quit failed');
   } finally {
     if (!redis.isOpen) return;
     try {
       await redis.disconnect();
     } catch (err) {
-      logger.warn({ err }, "Redis disconnect failed");
+      logger.warn({ err }, 'Redis disconnect failed');
     }
   }
 }
-

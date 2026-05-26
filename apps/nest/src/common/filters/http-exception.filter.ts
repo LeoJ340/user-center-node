@@ -20,9 +20,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     // Nest 主动抛出的 HttpException 保留原状态码，未知错误统一视为 500。
     const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+      exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const message = this.getMessage(exception);
 
@@ -48,11 +46,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       const body = exception.getResponse();
       if (typeof body === 'string') return body;
-      if (
-        typeof body === 'object' &&
-        body !== null &&
-        'message' in body
-      ) {
+      if (typeof body === 'object' && body !== null && 'message' in body) {
         const message = (body as { message: string | string[] }).message;
         return Array.isArray(message) ? message.join(', ') : message;
       }

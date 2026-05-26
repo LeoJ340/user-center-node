@@ -1,15 +1,15 @@
-import { randomUUID } from "crypto";
-import { AppError } from "@/utils/errors";
-import { hashToken, verifyPassword } from "@/utils/authCrypto";
-import { signAccessToken, signRefreshToken, verifyRefreshToken } from "@/utils/jwt";
-import { userRepo } from "@/modules/user/user.repo";
-import { refreshStore } from "./refreshStore";
+import { randomUUID } from 'crypto';
+import { AppError } from '@/utils/errors';
+import { hashToken, verifyPassword } from '@/utils/authCrypto';
+import { signAccessToken, signRefreshToken, verifyRefreshToken } from '@/utils/jwt';
+import { userRepo } from '@/modules/user/user.repo';
+import { refreshStore } from './refreshStore';
 
-const REFRESH_COOKIE_NAME = "refresh_token";
+const REFRESH_COOKIE_NAME = 'refresh_token';
 
 function sanitizeUser(user: any) {
-  const json = typeof user.toJSON === "function" ? user.toJSON() : user;
-  const { userPassword, ...rest } = json;
+  const json = typeof user.toJSON === 'function' ? user.toJSON() : user;
+  const { userPassword: _userPassword, ...rest } = json;
   return rest;
 }
 
@@ -18,22 +18,22 @@ export const authService = {
 
   mapRedisError(err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
-    if (msg.includes("NOAUTH")) return new AppError("Redis鉴权失败（请检查密码/用户名）", 503);
-    if (msg.includes("WRONGPASS")) return new AppError("Redis鉴权失败（密码错误）", 503);
-    if (msg.includes("ECONNREFUSED") || msg.includes("ENOTFOUND") || msg.includes("ETIMEDOUT")) {
-      return new AppError("Redis不可用（网络或地址不可达）", 503);
+    if (msg.includes('NOAUTH')) return new AppError('Redis鉴权失败（请检查密码/用户名）', 503);
+    if (msg.includes('WRONGPASS')) return new AppError('Redis鉴权失败（密码错误）', 503);
+    if (msg.includes('ECONNREFUSED') || msg.includes('ENOTFOUND') || msg.includes('ETIMEDOUT')) {
+      return new AppError('Redis不可用（网络或地址不可达）', 503);
     }
-    return new AppError("Redis不可用", 503);
+    return new AppError('Redis不可用', 503);
   },
 
   async login(account: string, password: string) {
     const user = await userRepo.findByLogin(account);
-    if (!user) throw new AppError("账号或密码错误", 401);
-    if (user.userStatus !== 0) throw new AppError("用户状态异常", 403);
-    if (user.deleted !== 0) throw new AppError("用户不存在", 404);
+    if (!user) throw new AppError('账号或密码错误', 401);
+    if (user.userStatus !== 0) throw new AppError('用户状态异常', 403);
+    if (user.deleted !== 0) throw new AppError('用户不存在', 404);
 
     const ok = await verifyPassword(password, user.userPassword);
-    if (!ok) throw new AppError("账号或密码错误", 401);
+    if (!ok) throw new AppError('账号或密码错误', 401);
 
     const userId = String(user.id);
     // sid 用于把 Access/Refresh 绑定到同一次“登录会话”。
@@ -75,9 +75,9 @@ export const authService = {
     try {
       payload = verifyRefreshToken(refreshToken) as any;
     } catch {
-      throw new AppError("登录已过期", 401);
+      throw new AppError('登录已过期', 401);
     }
-    if (payload.type !== "refresh") throw new AppError("登录已过期", 401);
+    if (payload.type !== 'refresh') throw new AppError('登录已过期', 401);
 
     const userId = String(payload.sub);
     let parsed: { sid: string; hash: string } | null;
@@ -86,12 +86,12 @@ export const authService = {
     } catch (err) {
       throw this.mapRedisError(err);
     }
-    if (!parsed) throw new AppError("登录已过期", 401);
+    if (!parsed) throw new AppError('登录已过期', 401);
 
     const incomingHash = hashToken(refreshToken);
     // 任一不匹配都视为 refresh 无效（常见原因：已 logout、已旋转、被篡改、或过期）。
     if (parsed.sid !== payload.sid || parsed.hash !== incomingHash) {
-      throw new AppError("登录已过期", 401);
+      throw new AppError('登录已过期', 401);
     }
 
     const sid = String(payload.sid);
@@ -129,4 +129,3 @@ export const authService = {
     }
   },
 };
-
