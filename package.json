@@ -3,13 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.29.2",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=10"
+  },
   "scripts": {
-    "dev": "pnpm --filter @user-center/express dev",
     "dev:express": "pnpm --filter @user-center/express dev",
+    "dev:nest": "pnpm --filter @user-center/nest start:dev",
     "build": "pnpm -r build",
     "build:express": "pnpm --filter @user-center/express build",
+    "build:nest": "pnpm --filter @user-center/nest build",
     "test": "pnpm -r test",
     "test:express": "pnpm --filter @user-center/express test",
-    "start:express": "pnpm --filter @user-center/express start"
+    "test:nest": "pnpm --filter @user-center/nest test",
+    "start:express": "pnpm --filter @user-center/express start",
+    "start:nest": "pnpm --filter @user-center/nest start"
   }
 }
