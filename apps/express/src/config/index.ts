@@ -1,23 +1,23 @@
-import { env } from './env';
+import { env } from './env'
 
 function buildRedisUrl() {
-  if (env.REDIS_URL) return env.REDIS_URL;
+  if (env.REDIS_URL) return env.REDIS_URL
 
-  const host = env.REDIS_HOST ?? '127.0.0.1';
-  const port = env.REDIS_PORT ?? 6379;
-  const username = env.REDIS_USERNAME;
-  const password = env.REDIS_PASSWORD;
+  const host = env.REDIS_HOST ?? '127.0.0.1'
+  const port = env.REDIS_PORT ?? 6379
+  const username = env.REDIS_USERNAME
+  const password = env.REDIS_PASSWORD
 
   if (password == null || password === '') {
-    return `redis://${host}:${port}`;
+    return `redis://${host}:${port}`
   }
 
-  const encodedPassword = encodeURIComponent(password);
+  const encodedPassword = encodeURIComponent(password)
   const auth = username
     ? `${encodeURIComponent(username)}:${encodedPassword}`
-    : `:${encodedPassword}`;
+    : `:${encodedPassword}`
 
-  return `redis://${auth}@${host}:${port}`;
+  return `redis://${auth}@${host}:${port}`
 }
 
 export const config = {
@@ -56,4 +56,4 @@ export const config = {
       idle: env.DB_POOL_IDLE,
     },
   },
-} as const;
+} as const

@@ -1,15 +1,15 @@
-import test from 'node:test';
-import assert from 'node:assert/strict';
-import { safeUserSchema } from '@/modules/user/user.schema';
+import test from 'node:test'
+import assert from 'node:assert/strict'
+import { safeUserSchema } from '@/modules/user/user.schema'
 
 test('safeUserSchema: valid payload passes validation', () => {
   const result = safeUserSchema.safeParse({
     userAccount: 'test_user',
-  });
-  assert.equal(result.success, true);
-  if (!result.success) return;
-  assert.equal(result.data.userAccount, 'test_user');
-});
+  })
+  assert.equal(result.success, true)
+  if (!result.success) return
+  assert.equal(result.data.userAccount, 'test_user')
+})
 
 // test("registerSchema: valid payload passes validation", () => {
 //   const result = registerSchema.safeParse({

@@ -5,21 +5,21 @@ import {
   InferCreationAttributes,
   Model,
   type Sequelize,
-} from 'sequelize';
+} from 'sequelize'
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
-  declare id: CreationOptional<string>;
-  declare nickname: string | null;
-  declare userAccount: string | null;
-  declare avatar: string | null;
-  declare gender: number | null;
-  declare userPassword: string;
-  declare phone: string | null;
-  declare email: string | null;
-  declare userStatus: CreationOptional<number>;
-  declare deleted: CreationOptional<number>;
-  declare createdAt: CreationOptional<Date>;
-  declare updatedAt: Date | null;
+  declare id: CreationOptional<string>
+  declare nickname: string | null
+  declare userAccount: string | null
+  declare avatar: string | null
+  declare gender: number | null
+  declare userPassword: string
+  declare phone: string | null
+  declare email: string | null
+  declare userStatus: CreationOptional<number>
+  declare deleted: CreationOptional<number>
+  declare createdAt: CreationOptional<Date>
+  declare updatedAt: Date | null
 
   static initModel(sequelize: Sequelize) {
     User.init(
@@ -88,8 +88,8 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
         createdAt: 'create_time',
         updatedAt: 'update_time',
       },
-    );
+    )
 
-    return User;
+    return User
   }
 }

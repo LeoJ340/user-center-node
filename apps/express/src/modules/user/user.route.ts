@@ -1,7 +1,7 @@
-import { Router } from 'express';
-import { authenticate } from '@/middlewares/auth';
-import { userController } from './user.controller';
+import { Router } from 'express'
+import { authenticate } from '@/middlewares/auth'
+import { userController } from './user.controller'
 
-export const userRouter = Router();
+export const userRouter = Router()
 
-userRouter.get('/:id', authenticate, userController.getById);
+userRouter.get('/:id', authenticate, userController.getById)

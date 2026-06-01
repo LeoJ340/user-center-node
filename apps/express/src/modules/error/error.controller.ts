@@ -1,4 +1,4 @@
-import type { Request, Response } from 'express';
+import type { Request, Response } from 'express'
 
 export const errorController = {
   throwError(_req: Request, _res: Response) {
@@ -7,7 +7,7 @@ export const errorController = {
       data: null,
       message: '123',
       requestId: _res.locals.requestId,
-    });
+    })
     // throw new Error("测试报错接口")
   },
-};
+}

@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export const userSchema = z.object({
   id: z.string().trim().uuid().optional(),
@@ -13,9 +13,9 @@ export const userSchema = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
   deleted: z.number().int().optional(),
-});
+})
 
-export const safeUserSchema = userSchema.omit({ userPassword: true }).strict();
+export const safeUserSchema = userSchema.omit({ userPassword: true }).strict()
 
-export type User = z.infer<typeof userSchema>;
-export type SafeUser = z.infer<typeof safeUserSchema>;
+export type User = z.infer<typeof userSchema>
+export type SafeUser = z.infer<typeof safeUserSchema>

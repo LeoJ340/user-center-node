@@ -1,10 +1,10 @@
-import path from 'path';
-import dotenv from 'dotenv';
-import { z } from 'zod';
+import path from 'path'
+import dotenv from 'dotenv'
+import { z } from 'zod'
 
-const nodeEnv = (process.env.NODE_ENV ?? 'development') as string;
-const envFile = path.resolve(process.cwd(), `.env.${nodeEnv}`);
-dotenv.config({ path: envFile });
+const nodeEnv = (process.env.NODE_ENV ?? 'development') as string
+const envFile = path.resolve(process.cwd(), `.env.${nodeEnv}`)
+dotenv.config({ path: envFile })
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
@@ -35,16 +35,13 @@ const envSchema = z.object({
   REDIS_PORT: z.coerce.number().int().positive().optional().default(6379),
   REDIS_USERNAME: z.string().min(1).optional(),
   REDIS_PASSWORD: z.string().optional(),
-});
+})
 
-const parsed = envSchema.safeParse(process.env);
+const parsed = envSchema.safeParse(process.env)
 if (!parsed.success) {
-  console.error(
-    '环境变量校验失败：\n',
-    JSON.stringify(parsed.error.flatten().fieldErrors, null, 2),
-  );
-  process.exit(1);
+  console.error('环境变量校验失败：\n', JSON.stringify(parsed.error.flatten().fieldErrors, null, 2))
+  process.exit(1)
 }
 
-export const env = parsed.data;
-export type Env = typeof env;
+export const env = parsed.data
+export type Env = typeof env

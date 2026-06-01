@@ -1,5 +1,5 @@
-import pino from 'pino';
-import { config } from './index';
+import pino from 'pino'
+import { config } from './index'
 
 export const logger = pino({
   level: config.logLevel,
@@ -7,4 +7,4 @@ export const logger = pino({
     paths: ['req.headers.authorization', 'req.headers.cookie'],
     remove: true,
   },
-});
+})

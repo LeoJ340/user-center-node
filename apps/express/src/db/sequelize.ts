@@ -1,6 +1,6 @@
-import { Sequelize } from 'sequelize';
-import { config } from '@/config';
-import { logger } from '@/config/logger';
+import { Sequelize } from 'sequelize'
+import { config } from '@/config'
+import { logger } from '@/config/logger'
 
 export const sequelize = new Sequelize(config.db.name, config.db.user, config.db.pass, {
   host: config.db.host,
@@ -14,8 +14,8 @@ export const sequelize = new Sequelize(config.db.name, config.db.user, config.db
     acquire: config.db.pool.acquire,
     idle: config.db.pool.idle,
   },
-});
+})
 
 export async function connectDb() {
-  await sequelize.authenticate();
+  await sequelize.authenticate()
 }
