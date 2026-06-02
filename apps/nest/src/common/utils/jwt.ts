@@ -21,6 +21,7 @@ export function signAccessToken(payload: Omit<AccessTokenPayload, 'type'>) {
   const options: SignOptions = {
     expiresIn: config.auth.accessExpiresIn as unknown as SignOptions['expiresIn'],
   }
+
   return jwt.sign(
     { ...payload, type: 'access' } satisfies AccessTokenPayload,
     config.auth.accessSecret,
@@ -32,6 +33,7 @@ export function signRefreshToken(payload: Omit<RefreshTokenPayload, 'type'>) {
   const options: SignOptions = {
     expiresIn: config.auth.refreshExpiresIn as unknown as SignOptions['expiresIn'],
   }
+
   return jwt.sign(
     { ...payload, type: 'refresh' } satisfies RefreshTokenPayload,
     config.auth.refreshSecret,

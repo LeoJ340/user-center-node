@@ -16,6 +16,18 @@ function sanitizeUser(user: any) {
 export const authService = {
   REFRESH_COOKIE_NAME,
 
+  /**
+   * payload.exp：token 过期时间戳（秒）
+   * nowSec：当前时间戳（秒）
+   * payload.exp - nowSec：token 过期时间减去当前时间（距离过期还剩多少秒）
+   * Math.max(1, ...)：最小给 1 秒，避免出现 0 或负数导致 Redis EX 不合法/立即失效
+   */
+  getRefreshTokenTtl(refreshToken: string) {
+    const payload = verifyRefreshToken(refreshToken)
+    const nowSec = Math.floor(Date.now() / 1000)
+    return Math.max(1, Number(payload.exp ?? nowSec + 7 * 24 * 3600) - nowSec)
+  },
+
   mapRedisError(err: unknown) {
     const msg = err instanceof Error ? err.message : String(err)
     if (msg.includes('NOAUTH')) return new AppError('Redis鉴权失败（请检查密码/用户名）', 503)
@@ -41,16 +53,8 @@ export const authService = {
     const sid = randomUUID()
     const refreshToken = signRefreshToken({ sub: userId, sid })
     const accessToken = signAccessToken({ sub: userId, sid })
+    const ttl = this.getRefreshTokenTtl(refreshToken)
 
-    const payload = verifyRefreshToken(refreshToken) as any
-    const nowSec = Math.floor(Date.now() / 1000)
-    /**
-     * payload.exp：token 过期时间戳（秒）
-     * nowSec：当前时间戳（秒）
-     * payload.exp - nowSec：token 过期时间减去当前时间（距离过期还剩多少秒）
-     * Math.max(1, ...)：最小给 1 秒，避免出现 0 或负数导致 Redis EX 不合法/立即失效
-     */
-    const ttl = Math.max(1, Number(payload.exp ?? nowSec + 7 * 24 * 3600) - nowSec)
     try {
       /**
        * 服务端只存 refreshToken 的 hash（不存明文），用于：
@@ -71,7 +75,7 @@ export const authService = {
   },
 
   async refresh(refreshToken: string) {
-    let payload: any
+    let payload: ReturnType<typeof verifyRefreshToken>
     try {
       payload = verifyRefreshToken(refreshToken) as any
     } catch {
@@ -97,10 +101,8 @@ export const authService = {
     const sid = String(payload.sid)
     const newRefreshToken = signRefreshToken({ sub: userId, sid })
     const newAccessToken = signAccessToken({ sub: userId, sid })
+    const ttl = this.getRefreshTokenTtl(refreshToken)
 
-    const newPayload = verifyRefreshToken(newRefreshToken) as any
-    const nowSec = Math.floor(Date.now() / 1000)
-    const ttl = Math.max(1, Number(newPayload.exp ?? nowSec + 7 * 24 * 3600) - nowSec)
     try {
       // Refresh Token 旋转：覆盖存储 hash，使旧 refreshToken 立即失效。
       await refreshStore.set(userId, { sid, hash: hashToken(newRefreshToken) }, ttl)
@@ -118,12 +120,7 @@ export const authService = {
     if (!refreshToken) return
     try {
       const payload = verifyRefreshToken(refreshToken) as any
-      const userId = String(payload.sub)
-      try {
-        await refreshStore.del(userId)
-      } catch {
-        // ignore
-      }
+      await refreshStore.del(String(payload.sub))
     } catch {
       // ignore
     }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class AppService {
@@ -8,6 +8,6 @@ export class AppService {
       status: 'ok',
       service: '@user-center/nest',
       timestamp: new Date().toISOString(),
-    };
+    }
   }
 }
