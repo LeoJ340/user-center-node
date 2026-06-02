@@ -19,7 +19,7 @@ const httpLogger = pinoHttp({
 })
 
 @Injectable()
-export class Logger implements NestMiddleware {
+export class HttpLoggerMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     httpLogger(req, res, next)
   }
