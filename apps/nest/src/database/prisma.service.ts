@@ -7,12 +7,14 @@ import { config } from '@/config'
 export class PrismaService extends PrismaClient implements OnModuleDestroy {
   constructor() {
     // Prisma v7（engineType=client）要求通过 adapter 显式提供数据库连接。
+    // 统一从 DATABASE_URL 解析连接信息，避免 CLI 与 runtime 配置分叉。
+    const dbUrl = new URL(config.db.url)
     const adapter = new PrismaMariaDb({
-      host: config.db.host,
-      port: config.db.port,
-      user: config.db.user,
-      password: config.db.pass,
-      database: config.db.name,
+      host: dbUrl.hostname,
+      port: Number(dbUrl.port || 3306),
+      user: decodeURIComponent(dbUrl.username),
+      password: decodeURIComponent(dbUrl.password),
+      database: decodeURIComponent(dbUrl.pathname.replace(/^\/+/, '')),
       connectionLimit: config.db.pool.max,
     })
     super({ adapter })

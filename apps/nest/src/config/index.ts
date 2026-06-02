@@ -1,19 +1,5 @@
 import { env } from './env'
 
-function buildDatabaseUrl() {
-  if (env.DATABASE_URL) return env.DATABASE_URL
-
-  const auth = `${encodeURIComponent(env.DB_USER)}:${encodeURIComponent(env.DB_PASS)}`
-  const database = encodeURIComponent(env.DB_NAME)
-  const poolTimeoutSec = Math.max(1, Math.ceil(env.DB_POOL_ACQUIRE / 1000))
-  const params = new URLSearchParams({
-    connection_limit: String(env.DB_POOL_MAX),
-    pool_timeout: String(poolTimeoutSec),
-  })
-
-  return `mysql://${auth}@${env.DB_HOST}:${env.DB_PORT}/${database}?${params.toString()}`
-}
-
 function buildRedisUrl() {
   if (env.REDIS_URL) return env.REDIS_URL
 
@@ -34,8 +20,13 @@ function buildRedisUrl() {
   return `redis://${auth}@${host}:${port}`
 }
 
-const databaseUrl = buildDatabaseUrl()
-process.env.DATABASE_URL = databaseUrl
+const databaseUrl = env.DATABASE_URL
+const parsedDatabaseUrl = new URL(databaseUrl)
+const parsedDatabaseName = decodeURIComponent(parsedDatabaseUrl.pathname.replace(/^\/+/, ''))
+const parsedDatabaseUser = decodeURIComponent(parsedDatabaseUrl.username)
+const parsedDatabasePass = decodeURIComponent(parsedDatabaseUrl.password)
+const parsedDatabasePort = Number(parsedDatabaseUrl.port || 3306)
+const poolTimeoutSec = Math.max(1, Math.ceil(env.DB_POOL_ACQUIRE / 1000))
 
 export const config = {
   env: env.NODE_ENV,
@@ -53,15 +44,15 @@ export const config = {
   },
   db: {
     url: databaseUrl,
-    host: env.DB_HOST,
-    port: env.DB_PORT,
-    user: env.DB_USER,
-    pass: env.DB_PASS,
-    name: env.DB_NAME,
+    host: parsedDatabaseUrl.hostname,
+    port: parsedDatabasePort,
+    user: parsedDatabaseUser,
+    pass: parsedDatabasePass,
+    name: parsedDatabaseName,
     pool: {
-      max: env.DB_POOL_MAX,
+      max: Number(parsedDatabaseUrl.searchParams.get('connection_limit') ?? env.DB_POOL_MAX),
       min: env.DB_POOL_MIN,
-      acquire: env.DB_POOL_ACQUIRE,
+      acquire: Number(parsedDatabaseUrl.searchParams.get('pool_timeout') ?? poolTimeoutSec) * 1000,
       idle: env.DB_POOL_IDLE,
     },
   },
