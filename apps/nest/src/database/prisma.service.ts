@@ -1,6 +1,6 @@
 import { Injectable, OnModuleDestroy } from '@nestjs/common'
 import { PrismaMariaDb } from '@prisma/adapter-mariadb'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@generated/prisma/client'
 import { config } from '@/config'
 
 @Injectable()
@@ -16,6 +16,7 @@ export class PrismaService extends PrismaClient implements OnModuleDestroy {
       password: decodeURIComponent(dbUrl.password),
       database: decodeURIComponent(dbUrl.pathname.replace(/^\/+/, '')),
       connectionLimit: config.db.pool.max,
+      acquireTimeout: config.db.pool.acquire,
     })
     super({ adapter })
   }

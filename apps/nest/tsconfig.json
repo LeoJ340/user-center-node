@@ -13,7 +13,8 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@generated/*": ["src/generated/*"]
     },
     "incremental": true,
     "strictNullChecks": true,

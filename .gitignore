@@ -18,3 +18,7 @@ pnpm-debug.log*
 .DS_Store
 Thumbs.db
 .idea/*
+
+# Prisma generated client (custom output in monorepo apps)
+apps/**/src/generated/prisma/
+apps/**/generated/prisma/
